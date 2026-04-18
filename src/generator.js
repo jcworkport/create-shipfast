@@ -54,26 +54,4 @@ export async function generate(answers, context, outputDir) {
     outputDir,
     context,
   );
-
-  printNextSteps(answers);
-}
-
-function printNextSteps(answers) {
-  console.log('\n✅ Project generated!\n');
-  console.log('Run locally:');
-  console.log(`  cd ${answers.projectName}`);
-  console.log('  npm run dev:build   # first run (builds images)');
-  console.log('  npm run dev         # subsequent runs\n');
-  console.log('Deploy to AWS ECS:');
-  console.log('  npm run deploy\n');
-  console.log('Add these secrets to your GitHub repository:');
-  const secrets = [
-    'AWS_ACCESS_KEY_ID',
-    'AWS_SECRET_ACCESS_KEY',
-    'AWS_REGION',
-    'ECR_REGISTRY',
-    'DATABASE_URL',
-  ];
-  if (answers.auth === 'kratos') secrets.push('KRATOS_URL');
-  secrets.forEach((s) => console.log(`  ${s}`));
 }
