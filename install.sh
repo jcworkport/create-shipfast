@@ -2,7 +2,7 @@
 set -e
 
 INSTALL_DIR="/usr/local/bin"
-CLI_NAME="create-ks-app"
+CLI_NAME="create-ship-app"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "Installing $CLI_NAME to $INSTALL_DIR..."

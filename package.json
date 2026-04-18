@@ -1,10 +1,10 @@
 {
-  "name": "create-ks-app",
+  "name": "create-ship-app",
   "version": "1.0.0",
   "description": "Scaffold production-ready client web applications",
   "type": "module",
   "bin": {
-    "create-ks-app": "./src/cli.js"
+    "create-ship-app": "./src/cli.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest"

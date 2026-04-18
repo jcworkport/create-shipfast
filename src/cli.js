@@ -8,7 +8,7 @@ import { generate } from './generator.js';
 const program = new Command();
 
 program
-  .name('create-ks-app')
+  .name('create-ship-app')
   .description('Scaffold a production-ready client web application')
   .version('1.0.0')
   .action(async () => {
