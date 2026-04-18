@@ -1,5 +1,9 @@
 # create-shipfast
 
+[![npm version](https://img.shields.io/npm/v/create-shipfast.svg)](https://www.npmjs.com/package/create-shipfast)
+[![npm downloads](https://img.shields.io/npm/dm/create-shipfast.svg)](https://www.npmjs.com/package/create-shipfast)
+[![License: MIT](https://img.shields.io/npm/l/create-shipfast.svg)](https://opensource.org/licenses/MIT)
+
 Scaffold a production-ready client web application in seconds.
 
 ```bash
