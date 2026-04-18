@@ -1,0 +1,17 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+{{#if isPostgres}}import { PrismaModule } from './prisma/prisma.module.js';{{/if}}
+{{#if isMongo}}import { MongooseModule } from '@nestjs/mongoose';{{/if}}
+{{#if hasAuth}}import { AuthModule } from './auth/auth.module.js';{{/if}}
+import { UserModule } from './user/user.module.js';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    {{#if isPostgres}}PrismaModule,{{/if}}
+    {{#if isMongo}}MongooseModule.forRoot(process.env.MONGODB_URI),{{/if}}
+    {{#if hasAuth}}AuthModule,{{/if}}
+    UserModule,
+  ],
+})
+export class AppModule {}

@@ -1,0 +1,14 @@
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { UserService } from './user.service.js';
+{{#if hasAuth}}import { SessionGuard } from '../auth/session.guard.js';{{/if}}
+
+@Controller('users')
+export class UserController {
+  constructor(private users: UserService) {}
+
+  {{#if hasAuth}}@UseGuards(SessionGuard){{/if}}
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.users.findById(id);
+  }
+}

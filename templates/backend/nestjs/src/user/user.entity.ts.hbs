@@ -1,0 +1,21 @@
+{{#if isPostgres}}
+// Managed via Prisma — see prisma/schema.prisma
+export interface User {
+  id: string;
+  email: string;
+  {{#if isJwt}}passwordHash: string;{{/if}}
+  createdAt: Date;
+}
+{{/if}}
+{{#if isMongo}}
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+@Schema({ timestamps: true })
+export class User extends Document {
+  @Prop({ required: true, unique: true }) email: string;
+  {{#if isJwt}}@Prop({ required: true }) passwordHash: string;{{/if}}
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
+{{/if}}

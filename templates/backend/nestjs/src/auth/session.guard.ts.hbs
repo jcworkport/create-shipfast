@@ -1,0 +1,53 @@
+{{#if isKratos}}
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+
+@Injectable()
+export class SessionGuard implements CanActivate {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const cookie = request.headers['cookie'];
+    if (!cookie) throw new UnauthorizedException();
+
+    const res = await fetch(`${process.env.KRATOS_URL}/sessions/whoami`, {
+      headers: { cookie },
+    });
+
+    if (!res.ok) throw new UnauthorizedException();
+
+    const session = await res.json();
+    request.user = session.identity;
+    return true;
+  }
+}
+{{/if}}
+{{#if isJwt}}
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class SessionGuard implements CanActivate {
+  constructor(private jwt: JwtService) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers['authorization']?.split(' ')[1];
+    if (!token) throw new UnauthorizedException();
+    try {
+      request.user = this.jwt.verify(token);
+      return true;
+    } catch {
+      throw new UnauthorizedException();
+    }
+  }
+}
+{{/if}}

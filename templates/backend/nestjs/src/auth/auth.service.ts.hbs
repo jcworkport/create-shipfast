@@ -1,0 +1,43 @@
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+{{#if isJwt}}
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { UserService } from '../user/user.service.js';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private users: UserService,
+    private jwt: JwtService,
+  ) {}
+
+  async register(email: string, password: string) {
+    const hash = await bcrypt.hash(password, 12);
+    return this.users.create({ email, passwordHash: hash });
+  }
+
+  async login(email: string, password: string) {
+    const user = await this.users.findByEmail(email);
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) throw new UnauthorizedException('Invalid credentials');
+    const payload = { sub: user.id, email: user.email };
+    return {
+      accessToken: this.jwt.sign(payload, { expiresIn: '15m' }),
+      refreshToken: this.jwt.sign(payload, { expiresIn: '7d' }),
+    };
+  }
+}
+{{/if}}
+{{#if isKratos}}
+@Injectable()
+export class AuthService {
+  async getSession(cookie: string) {
+    const res = await fetch(`${process.env.KRATOS_URL}/sessions/whoami`, {
+      headers: { cookie },
+    });
+    if (!res.ok) throw new UnauthorizedException();
+    return res.json();
+  }
+}
+{{/if}}

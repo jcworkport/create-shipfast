@@ -1,0 +1,35 @@
+import { Controller, Post, Body, Req, Get, UseGuards } from '@nestjs/common';
+import { AuthService } from './auth.service.js';
+import { SessionGuard } from './session.guard.js';
+
+{{#if isJwt}}
+class RegisterDto { email: string; password: string; }
+class LoginDto { email: string; password: string; }
+
+@Controller('auth')
+export class AuthController {
+  constructor(private auth: AuthService) {}
+
+  @Post('register')
+  register(@Body() body: RegisterDto) {
+    return this.auth.register(body.email, body.password);
+  }
+
+  @Post('login')
+  login(@Body() body: LoginDto) {
+    return this.auth.login(body.email, body.password);
+  }
+}
+{{/if}}
+{{#if isKratos}}
+@Controller('auth')
+export class AuthController {
+  constructor(private auth: AuthService) {}
+
+  @Get('session')
+  @UseGuards(SessionGuard)
+  session(@Req() req: any) {
+    return req.user;
+  }
+}
+{{/if}}

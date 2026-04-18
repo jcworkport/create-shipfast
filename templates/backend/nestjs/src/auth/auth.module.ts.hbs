@@ -1,0 +1,32 @@
+import { Module } from '@nestjs/common';
+{{#if isKratos}}
+import { AuthService } from './auth.service.js';
+import { AuthController } from './auth.controller.js';
+import { SessionGuard } from './session.guard.js';
+
+@Module({
+  providers: [AuthService, SessionGuard],
+  controllers: [AuthController],
+  exports: [SessionGuard],
+})
+export class AuthModule {}
+{{/if}}
+{{#if isJwt}}
+import { JwtModule } from '@nestjs/jwt';
+import { AuthService } from './auth.service.js';
+import { AuthController } from './auth.controller.js';
+import { SessionGuard } from './session.guard.js';
+
+@Module({
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '15m' },
+    }),
+  ],
+  providers: [AuthService, SessionGuard],
+  controllers: [AuthController],
+  exports: [SessionGuard, JwtModule],
+})
+export class AuthModule {}
+{{/if}}
