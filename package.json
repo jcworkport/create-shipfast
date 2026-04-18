@@ -1,0 +1,24 @@
+{
+  "name": "create-ks-app",
+  "version": "1.0.0",
+  "description": "Scaffold production-ready client web applications",
+  "type": "module",
+  "bin": {
+    "create-ks-app": "./src/cli.js"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "handlebars": "^4.7.8",
+    "inquirer": "^9.2.23"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "extensionsToTreatAsEsm": [".js"],
+    "transform": {}
+  }
+}
