@@ -42,6 +42,29 @@ describe('processTemplateDir', () => {
     expect(result).toBe('hello world');
   });
 
+  test('dev compose is generated with volume mounts', async () => {
+    const src = await makeTmpDir();
+    const dest = await makeTmpDir();
+    const template = `services:
+  {{#if hasFrontend}}
+  frontend:
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - NODE_ENV={{nodeEnv}}
+  {{/if}}`;
+    await writeFile(join(src, 'docker-compose.dev.yml.hbs'), template);
+
+    await processTemplateDir(src, dest, { hasFrontend: true, nodeEnv: 'development' });
+
+    const result = await readFile(join(dest, 'docker-compose.dev.yml'), 'utf-8');
+    expect(result).toContain('./frontend:/app');
+    expect(result).toContain('npm run dev');
+    expect(result).toContain('NODE_ENV=development');
+  });
+
   test('handlebars conditionals exclude blocks when flag is false', async () => {
     const src = await makeTmpDir();
     const dest = await makeTmpDir();
