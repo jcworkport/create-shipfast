@@ -42,4 +42,16 @@ describe('buildContext', () => {
     expect(ctx.projectName).toBe('acme-app');
     expect(ctx.awsRegion).toBe('eu-west-2');
   });
+
+  test('sets backendHasDeps true when database is postgresql', () => {
+    const ctx = buildContext({ ...base, auth: 'none' });
+    expect(ctx.backendHasDeps).toBe(true);
+    expect(ctx.hasVolumes).toBe(true);
+  });
+
+  test('sets backendHasDeps false when database is none and auth is none', () => {
+    const ctx = buildContext({ ...base, database: 'none', auth: 'none' });
+    expect(ctx.backendHasDeps).toBe(false);
+    expect(ctx.hasVolumes).toBe(false);
+  });
 });
