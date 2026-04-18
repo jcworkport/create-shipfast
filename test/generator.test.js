@@ -42,6 +42,29 @@ describe('processTemplateDir', () => {
     expect(result).toBe('hello world');
   });
 
+  test('root package.json is generated with dev and deploy scripts', async () => {
+    const src = await makeTmpDir();
+    const dest = await makeTmpDir();
+    const template = `{
+  "name": "{{projectName}}",
+  "scripts": {
+    "dev": "docker compose -f docker-compose.dev.yml up",
+    "dev:build": "docker compose -f docker-compose.dev.yml up --build",
+    "deploy:build": "docker compose -f docker-compose.prod.yml build",
+    "deploy": "node deploy/build-tag-push.js"
+  }
+}`;
+    await writeFile(join(src, 'package.json.hbs'), template);
+
+    await processTemplateDir(src, dest, { projectName: 'my-app' });
+
+    const result = await readFile(join(dest, 'package.json'), 'utf-8');
+    const pkg = JSON.parse(result);
+    expect(pkg.name).toBe('my-app');
+    expect(pkg.scripts.dev).toBe('docker compose -f docker-compose.dev.yml up');
+    expect(pkg.scripts.deploy).toBe('node deploy/build-tag-push.js');
+  });
+
   test('dev compose is generated with volume mounts', async () => {
     const src = await makeTmpDir();
     const dest = await makeTmpDir();

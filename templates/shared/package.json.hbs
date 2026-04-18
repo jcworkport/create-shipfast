@@ -1,0 +1,11 @@
+{
+  "name": "{{projectName}}",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "docker compose -f docker-compose.dev.yml up",
+    "dev:build": "docker compose -f docker-compose.dev.yml up --build",
+    "deploy:build": "docker compose -f docker-compose.prod.yml build",
+    "deploy": "node deploy/build-tag-push.js"
+  }
+}
