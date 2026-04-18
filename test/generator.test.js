@@ -42,6 +42,25 @@ describe('processTemplateDir', () => {
     expect(result).toBe('hello world');
   });
 
+  test('nextjs dockerfile has dev and runner stages', async () => {
+    const src = await makeTmpDir();
+    const dest = await makeTmpDir();
+    const raw = await readFile(
+      new URL('../templates/frontend/nextjs/Dockerfile.hbs', import.meta.url),
+      'utf-8'
+    );
+    await writeFile(join(src, 'Dockerfile.hbs'), raw);
+
+    await processTemplateDir(src, dest, {});
+
+    const result = await readFile(join(dest, 'Dockerfile'), 'utf-8');
+    expect(result).toContain('AS deps');
+    expect(result).toContain('AS dev');
+    expect(result).toContain('AS builder');
+    expect(result).toContain('AS runner');
+    expect(result).toContain('CMD ["npm", "run", "dev"]');
+  });
+
   test('nestjs dockerfile has dev and runner stages', async () => {
     const src = await makeTmpDir();
     const dest = await makeTmpDir();
