@@ -1,6 +1,6 @@
 {
   "name": "create-shipfast",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Scaffold production-ready client web applications",
   "type": "module",
   "bin": {

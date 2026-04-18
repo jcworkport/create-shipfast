@@ -10,7 +10,7 @@ const program = new Command();
 program
   .name('create-shipfast')
   .description('Scaffold a production-ready client web application')
-  .version('1.0.0')
+  .version('0.1.0')
   .action(async () => {
     const answers = await collectAnswers();
     const context = buildContext(answers);
