@@ -4,7 +4,7 @@
   "description": "Scaffold production-ready client web applications",
   "type": "module",
   "bin": {
-    "create-shipfast": "./src/cli.js"
+    "create-shipfast": "src/cli.js"
   },
   "files": [
     "src",
