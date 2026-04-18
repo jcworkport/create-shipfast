@@ -22,6 +22,7 @@ export async function processTemplateDir(srcDir, destDir, context) {
     } else if (entry.name.endsWith('.hbs')) {
       const raw = await readFile(srcPath, 'utf-8');
       const compiled = Handlebars.compile(raw)(context);
+      if (!compiled.trim()) continue;
       await mkdir(dirname(destPath), { recursive: true });
       await writeFile(destPath, compiled, 'utf-8');
     } else {
