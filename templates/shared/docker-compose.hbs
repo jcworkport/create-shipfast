@@ -1,0 +1,80 @@
+services:
+  {{#if hasFrontend}}
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      {{#if hasBackend}}- backend{{/if}}
+  {{/if}}
+
+  {{#if hasBackend}}
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    env_file: .env
+    depends_on:
+      {{#if isPostgres}}- postgres-app{{/if}}
+      {{#if isMongo}}- mongo{{/if}}
+      {{#if isKratos}}- kratos{{/if}}
+  {{/if}}
+
+  {{#if isPostgres}}
+  postgres-app:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: {{projectName}}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-app-data:/var/lib/postgresql/data
+  {{/if}}
+
+  {{#if isMongo}}
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  {{/if}}
+
+  {{#if isKratos}}
+  kratos:
+    image: oryd/kratos:v1.2
+    ports:
+      - "4433:4433"
+      - "4434:4434"
+    environment:
+      DSN: postgres://postgres:postgres@postgres-kratos:5432/kratos?sslmode=disable
+      SERVE_PUBLIC_BASE_URL: http://localhost:4433
+    volumes:
+      - ./infra/kratos:/etc/config/kratos
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    depends_on:
+      - postgres-kratos
+
+  postgres-kratos:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: kratos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-kratos-data:/var/lib/postgresql/data
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - "4436:4436"
+      - "4437:4437"
+  {{/if}}
+
+volumes:
+  {{#if isPostgres}}postgres-app-data:{{/if}}
+  {{#if isMongo}}mongo-data:{{/if}}
+  {{#if isKratos}}postgres-kratos-data:{{/if}}
