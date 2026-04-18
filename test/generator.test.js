@@ -42,6 +42,25 @@ describe('processTemplateDir', () => {
     expect(result).toBe('hello world');
   });
 
+  test('nestjs dockerfile has dev and runner stages', async () => {
+    const src = await makeTmpDir();
+    const dest = await makeTmpDir();
+    const raw = await readFile(
+      new URL('../templates/backend/nestjs/Dockerfile.hbs', import.meta.url),
+      'utf-8'
+    );
+    await writeFile(join(src, 'Dockerfile.hbs'), raw);
+
+    await processTemplateDir(src, dest, { isPostgres: false });
+
+    const result = await readFile(join(dest, 'Dockerfile'), 'utf-8');
+    expect(result).toContain('AS deps');
+    expect(result).toContain('AS dev');
+    expect(result).toContain('AS builder');
+    expect(result).toContain('AS runner');
+    expect(result).toContain('start:dev');
+  });
+
   test('root package.json is generated with dev and deploy scripts', async () => {
     const src = await makeTmpDir();
     const dest = await makeTmpDir();
