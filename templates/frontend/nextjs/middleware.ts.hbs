@@ -1,0 +1,28 @@
+{{#if hasAuth}}
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+const PUBLIC_PATHS = ['/', '/login', '/register'];
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  if (PUBLIC_PATHS.includes(pathname)) return NextResponse.next();
+
+  {{#if isKratos}}
+  const kratosCookie = request.cookies.get('ory_kratos_session');
+  if (!kratosCookie) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  {{/if}}
+  {{#if isJwt}}
+  const token = request.cookies.get('access_token');
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  {{/if}}
+
+  return NextResponse.next();
+}
+
+export const config = { matcher: ['/((?!_next|favicon.ico).*)'] };
+{{/if}}

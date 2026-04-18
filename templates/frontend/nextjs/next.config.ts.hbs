@@ -1,0 +1,11 @@
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  output: 'standalone',
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    {{#if isKratos}}NEXT_PUBLIC_KRATOS_URL: process.env.NEXT_PUBLIC_KRATOS_URL,{{/if}}
+  },
+};
+
+export default nextConfig;

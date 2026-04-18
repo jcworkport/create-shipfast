@@ -1,0 +1,48 @@
+{{#if isKratos}}
+const KRATOS_URL = process.env.NEXT_PUBLIC_KRATOS_URL ?? '';
+
+export async function getSession() {
+  const res = await fetch(`${KRATOS_URL}/sessions/whoami`, {
+    credentials: 'include',
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+export function getLoginUrl() {
+  return `${KRATOS_URL}/self-service/login/browser`;
+}
+
+export function getRegisterUrl() {
+  return `${KRATOS_URL}/self-service/registration/browser`;
+}
+
+export function getLogoutUrl() {
+  return `${KRATOS_URL}/self-service/logout/browser`;
+}
+{{/if}}
+{{#if isJwt}}
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
+
+export async function login(email: string, password: string) {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Login failed');
+  return res.json();
+}
+
+export async function register(email: string, password: string) {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Registration failed');
+  return res.json();
+}
+{{/if}}

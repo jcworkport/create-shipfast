@@ -1,0 +1,34 @@
+{{#if isKratos}}
+'use client';
+import { getLoginUrl } from '@/lib/auth';
+import { useEffect } from 'react';
+
+export default function LoginPage() {
+  useEffect(() => { window.location.href = getLoginUrl(); }, []);
+  return <p>Redirecting to login...</p>;
+}
+{{/if}}
+{{#if isJwt}}
+'use client';
+import { login } from '@/lib/auth';
+import { useState } from 'react';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await login(email, password);
+    window.location.href = '/dashboard';
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+{{/if}}
