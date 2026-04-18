@@ -61,7 +61,11 @@ export async function generate(answers, context, outputDir) {
 function printNextSteps(answers) {
   console.log('\n✅ Project generated!\n');
   console.log('Run locally:');
-  console.log(`  cd ${answers.projectName} && docker-compose up\n`);
+  console.log(`  cd ${answers.projectName}`);
+  console.log('  npm run dev:build   # first run (builds images)');
+  console.log('  npm run dev         # subsequent runs\n');
+  console.log('Deploy to AWS ECS:');
+  console.log('  npm run deploy\n');
   console.log('Add these secrets to your GitHub repository:');
   const secrets = [
     'AWS_ACCESS_KEY_ID',

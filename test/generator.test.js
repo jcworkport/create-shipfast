@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { processTemplateDir } from '../src/generator.js';
 import { mkdtemp, readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -124,6 +125,38 @@ describe('processTemplateDir', () => {
     expect(result).toContain('./frontend:/app');
     expect(result).toContain('npm run dev');
     expect(result).toContain('NODE_ENV=development');
+  });
+
+  test('generate prints dev instructions referencing npm run dev', async () => {
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const { mkdtemp: mkd } = await import('fs/promises');
+    const { join: j } = await import('path');
+    const { tmpdir: td } = await import('os');
+    const { generate } = await import('../src/generator.js');
+    const outputDir = await mkd(j(td(), 'gen-test-'));
+
+    const answers = {
+      projectName: 'test-app',
+      frontend: 'nextjs',
+      backend: 'nestjs',
+      database: 'postgresql',
+      auth: 'none',
+      awsRegion: 'eu-west-2',
+    };
+    const context = {
+      ...answers,
+      isNextjs: true, isNestjs: true, isPostgres: true,
+      isMongo: false, isKratos: false, isJwt: false, isReactSpa: false, isRemix: false,
+      isFastify: false, isExpress: false, hasAuth: false, hasDatabase: true,
+      hasFrontend: true, hasBackend: true,
+    };
+
+    await generate(answers, context, outputDir);
+
+    const allOutput = consoleSpy.mock.calls.flat().join(' ');
+    expect(allOutput).toContain('npm run dev');
+    expect(allOutput).not.toContain('docker-compose up');
+    consoleSpy.mockRestore();
   });
 
   test('handlebars conditionals exclude blocks when flag is false', async () => {
