@@ -88,6 +88,10 @@ my-app/
 └── .env.example
 ```
 
+## Compatibility
+
+macOS and Linux only. Windows is not supported.
+
 ## License
 
 MIT
