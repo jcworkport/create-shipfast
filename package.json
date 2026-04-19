@@ -28,7 +28,8 @@
   "files": [
     "src",
     "templates",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "license": "MIT",
   "engines": {
