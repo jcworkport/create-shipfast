@@ -4,6 +4,7 @@ import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import { collectAnswers, buildContext } from './prompts.js';
 import { generate } from './generator.js';
+import { fetchImageVersions } from './image-versions.js';
 
 const BANNER = `
    _____ __    _                        __
@@ -17,16 +18,28 @@ const BANNER = `
 console.log(BANNER);
 p.intro('scaffold a production-ready app');
 
-const answers = await collectAnswers();
-const context = buildContext(answers);
+const s = p.spinner();
+s.start('Checking latest image versions...');
+const { versions, failed } = await fetchImageVersions();
+s.stop('Image versions resolved.');
+
+if (failed.length > 0) {
+  p.note(
+    `Could not fetch latest versions for: ${failed.join(', ')}\nFalling back to known-good defaults. Verify manually before deploying.`,
+    'Warning',
+  );
+}
+
+const answers = await collectAnswers(versions);
+const context = buildContext(answers, versions);
 const outputDir = join(process.cwd(), answers.projectName);
 
 await mkdir(outputDir, { recursive: true });
 
-const s = p.spinner();
-s.start(`Scaffolding ${answers.projectName}`);
+const gen = p.spinner();
+gen.start(`Scaffolding ${answers.projectName}`);
 await generate(answers, context, outputDir);
-s.stop(`Scaffolded ${answers.projectName}`);
+gen.stop(`Scaffolded ${answers.projectName}`);
 
 const secrets = [
   'AWS_ACCESS_KEY_ID',
