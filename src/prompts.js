@@ -19,7 +19,7 @@ export async function collectAnswers(versions) {
   const frontend = cancelOnExit(await p.select({
     message: 'Frontend:',
     options: [
-      { value: 'nextjs', label: 'Next.js 15 (App Router)' },
+      { value: 'nextjs', label: `Next.js ${versions.nextjs.version} (App Router · ${versions.nextjs.date})` },
       { value: 'none',   label: 'None (API only)' },
     ],
   }));

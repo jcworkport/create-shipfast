@@ -13,7 +13,9 @@
     "@nestjs/core": "latest",
     "@nestjs/platform-fastify": "latest",
     "@nestjs/config": "latest",
-    {{#if isPostgres}}"@prisma/client": "latest",{{/if}}
+    {{#if isPostgres}}"@prisma/client": "latest",
+    "@prisma/adapter-pg": "latest",
+    "pg": "latest",{{/if}}
     {{#if isMongo}}"@nestjs/mongoose": "latest",
     "mongoose": "latest",{{/if}}
     {{#if isJwt}}"@nestjs/jwt": "latest",
@@ -29,7 +31,9 @@
     "@nestjs/cli": "latest",
     "@nestjs/testing": "latest",
     "@types/node": "latest",
-    {{#if isPostgres}}"prisma": "latest",{{/if}}
+    {{#if isPostgres}}"prisma": "latest",
+    "@types/pg": "latest",
+    "dotenv": "latest",{{/if}}
     {{#if isJwt}}"@types/bcrypt": "latest",
     "@types/passport-jwt": "latest",{{/if}}
     "typescript": "latest",

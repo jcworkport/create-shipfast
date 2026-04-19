@@ -23,6 +23,7 @@ const DEFAULTS = {
   mongo:    { tag: 'mongo:7',                 date: 'unknown', fallback: true },
   kratos:   { tag: 'oryd/kratos:v1.2',        date: 'unknown', fallback: true },
   mailpit:  { tag: 'axllent/mailpit:latest',  date: 'unknown', fallback: true },
+  nextjs:   { version: 'latest',              date: 'unknown', fallback: true },
 };
 
 export function isStableTag(name) {
@@ -48,14 +49,34 @@ async function fetchLatestTag(config) {
   }
 }
 
+async function fetchNextjsVersion() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+  try {
+    const res = await fetch('https://registry.npmjs.org/next', { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const version = data['dist-tags']?.latest;
+    if (!version) throw new Error('no latest tag found');
+    const date = data.time?.[version] ? data.time[version].slice(0, 10) : 'unknown';
+    return { version, date, fallback: false };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchImageVersions() {
-  const results = await Promise.allSettled(CONFIGS.map(fetchLatestTag));
+  const [dockerResults, nextjsResult] = await Promise.all([
+    Promise.allSettled(CONFIGS.map(fetchLatestTag)),
+    fetchNextjsVersion().catch(() => DEFAULTS.nextjs),
+  ]);
+
   const versions = {};
   const failed = [];
 
   for (let i = 0; i < CONFIGS.length; i++) {
     const { key } = CONFIGS[i];
-    const result = results[i];
+    const result = dockerResults[i];
     if (result.status === 'fulfilled') {
       versions[key] = result.value;
     } else {
@@ -63,6 +84,9 @@ export async function fetchImageVersions() {
       failed.push(key);
     }
   }
+
+  if (nextjsResult.fallback) failed.push('nextjs');
+  versions.nextjs = nextjsResult;
 
   return { versions, failed };
 }

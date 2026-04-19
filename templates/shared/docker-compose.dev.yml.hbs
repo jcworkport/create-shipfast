@@ -27,7 +27,7 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/app
-    command: sh -c "npm install{{#if isPostgres}} && npx prisma migrate deploy{{/if}} && npm run start:dev"
+    command: sh -c "npm install{{#if isPostgres}} && npx prisma generate && npx prisma migrate deploy{{/if}} && npm run start:dev"
     env_file: .env
     environment:
       - NODE_ENV=development
