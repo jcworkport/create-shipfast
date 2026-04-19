@@ -1,7 +1,26 @@
 {
   "name": "create-shipfast",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold production-ready client web applications",
+  "keywords": [
+    "scaffold",
+    "boilerplate",
+    "starter",
+    "create-app",
+    "nextjs",
+    "nestjs",
+    "fullstack",
+    "typescript",
+    "prisma",
+    "postgres",
+    "mongodb",
+    "docker",
+    "ory-kratos",
+    "jwt",
+    "aws",
+    "ecs",
+    "cli"
+  ],
   "type": "module",
   "bin": {
     "create-shipfast": "src/cli.js"
