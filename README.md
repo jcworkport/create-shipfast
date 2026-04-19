@@ -1,4 +1,11 @@
-<h1 align="center">⚡ create-shipfast</h1>
+<pre align="center">
+   _____ __    _                        __
+  / ___// /_  (_)___  ____  ____ ______/ /_
+  \__ \/ __ \/ / __ \/ __ \/ __ `/ ___/ __/
+ ___/ / / / / / /_/ / /_/ / /_/ (__  ) /_
+/____/_/ /_/_/ .___/\____/\__,_/____/\__/
+            /_/
+</pre>
 
 <p align="center">
   <strong>Scaffold a production-ready full-stack app in seconds.</strong><br>
