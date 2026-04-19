@@ -9,7 +9,8 @@
 
 <p align="center">
   <strong>Scaffold a production-ready full-stack app in seconds.</strong><br>
-  Next.js · NestJS · PostgreSQL · Ory Kratos · Docker · AWS ECS
+  Next.js · NestJS · PostgreSQL · Ory Kratos · Docker · AWS ECS<br>
+  <sub>More stacks on the way — <a href="#want-to-see-your-favourite-stack-here">help us build them</a></sub>
 </p>
 
 <p align="center">
