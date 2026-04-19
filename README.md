@@ -1,10 +1,24 @@
-# create-shipfast
+<h1 align="center">⚡ create-shipfast</h1>
 
-[![npm version](https://img.shields.io/npm/v/create-shipfast.svg)](https://www.npmjs.com/package/create-shipfast)
-[![npm downloads](https://img.shields.io/npm/dm/create-shipfast.svg)](https://www.npmjs.com/package/create-shipfast)
-[![License: MIT](https://img.shields.io/npm/l/create-shipfast.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <strong>Scaffold a production-ready full-stack app in seconds.</strong><br>
+  Next.js · NestJS · PostgreSQL · Ory Kratos · Docker · AWS ECS
+</p>
 
-Scaffold a production-ready client web application in seconds.
+<p align="center">
+  <a href="https://www.npmjs.com/package/create-shipfast"><img src="https://img.shields.io/npm/v/create-shipfast.svg?style=for-the-badge&color=CB3837&logo=npm&logoColor=white" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/create-shipfast"><img src="https://img.shields.io/npm/dm/create-shipfast.svg?style=for-the-badge&color=CB3837&logo=npm&logoColor=white" alt="npm downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
+</p>
+
+<p align="center">
+  <a href="#usage">Usage</a> ·
+  <a href="#what-it-generates">What it generates</a> ·
+  <a href="#prompts">Prompts</a> ·
+  <a href="#output-structure">Output structure</a>
+</p>
+
+---
 
 ```bash
 npx create-shipfast
