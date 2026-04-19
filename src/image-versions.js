@@ -1,10 +1,21 @@
 const PRERELEASE = /alpha|beta|rc|dev|preview|snapshot/i;
 
+const semverDesc = (a, b) => {
+  const pa = a.name.replace(/^v/, '').split(/[.\-]/);
+  const pb = b.name.replace(/^v/, '').split(/[.\-]/);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const na = parseInt(pa[i]) || 0;
+    const nb = parseInt(pb[i]) || 0;
+    if (nb !== na) return nb - na;
+  }
+  return 0;
+};
+
 const CONFIGS = [
-  { key: 'postgres', repo: 'library/postgres',  regex: /^\d+\.\d+-alpine$/, prefix: 'postgres' },
-  { key: 'mongo',    repo: 'library/mongo',      regex: /^\d+\.\d+\.\d+$/,  prefix: 'mongo' },
-  { key: 'kratos',   repo: 'oryd/kratos',        regex: /^v\d+\.\d+\.\d+$/, prefix: 'oryd/kratos' },
-  { key: 'mailpit',  repo: 'axllent/mailpit',    regex: /^v\d+\.\d+\.\d+$/, prefix: 'axllent/mailpit' },
+  { key: 'postgres', repo: 'library/postgres',  regex: /^\d+\.\d+-alpine$/, prefix: 'postgres', sort: semverDesc },
+  { key: 'mongo',    repo: 'library/mongo',      regex: /^\d+\.\d+\.\d+$/,  prefix: 'mongo',    sort: semverDesc },
+  { key: 'kratos',   repo: 'oryd/kratos',        regex: /^v\d+\.\d+\.\d+$/, prefix: 'oryd/kratos',    sort: semverDesc },
+  { key: 'mailpit',  repo: 'axllent/mailpit',    regex: /^v\d+\.\d+\.\d+$/, prefix: 'axllent/mailpit', sort: semverDesc },
 ];
 
 const DEFAULTS = {
@@ -27,8 +38,9 @@ async function fetchLatestTag(config) {
     const res = await fetch(url, { signal: controller.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    const tag = data.results.find(t => config.regex.test(t.name) && isStableTag(t.name));
-    if (!tag) throw new Error('no stable tag found');
+    const matches = data.results.filter(t => config.regex.test(t.name) && isStableTag(t.name));
+    if (!matches.length) throw new Error('no stable tag found');
+    const tag = config.sort ? matches.sort(config.sort)[0] : matches[0];
     const date = tag.last_updated ? tag.last_updated.slice(0, 10) : 'unknown';
     return { tag: `${config.prefix}:${tag.name}`, date, fallback: false };
   } finally {

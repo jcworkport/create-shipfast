@@ -8,8 +8,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
     env_file: .env
     environment:
       - NODE_ENV=development
@@ -28,8 +27,7 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/app
-      - /app/node_modules
-    command: npm run start:dev
+    command: sh -c "npm install{{#if isPostgres}} && npx prisma migrate deploy{{/if}} && npm run start:dev"
     env_file: .env
     environment:
       - NODE_ENV=development
@@ -67,19 +65,30 @@ services:
   {{/if}}
 
   {{#if isKratos}}
+  kratos-migrate:
+    image: {{kratosImage}}
+    environment:
+      - DSN=postgres://postgres:postgres@postgres-kratos:5432/kratos?sslmode=disable
+    volumes:
+      - ./infra/kratos:/etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+    depends_on:
+      - postgres-kratos
+
   kratos:
     image: {{kratosImage}}
     ports:
       - "4433:4433"
       - "4434:4434"
     environment:
-      DSN: postgres://postgres:postgres@postgres-kratos:5432/kratos?sslmode=disable
-      SERVE_PUBLIC_BASE_URL: http://localhost:4433
+      - DSN=postgres://postgres:postgres@postgres-kratos:5432/kratos?sslmode=disable
     volumes:
       - ./infra/kratos:/etc/config/kratos
     command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    restart: unless-stopped
     depends_on:
-      - postgres-kratos
+      - kratos-migrate
 
   postgres-kratos:
     image: {{postgresImage}}
