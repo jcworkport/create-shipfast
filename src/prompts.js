@@ -8,7 +8,7 @@ function cancelOnExit(value) {
   return value;
 }
 
-export async function collectAnswers() {
+export async function collectAnswers(versions) {
   const projectName = cancelOnExit(await p.text({
     message: 'Project name:',
     validate: (v) => /^[a-z0-9-]+$/.test(v)
@@ -35,8 +35,8 @@ export async function collectAnswers() {
   const database = cancelOnExit(await p.select({
     message: 'Database:',
     options: [
-      { value: 'postgresql', label: 'PostgreSQL' },
-      { value: 'mongodb',    label: 'MongoDB' },
+      { value: 'postgresql', label: `PostgreSQL  (${versions.postgres.tag} · ${versions.postgres.date})` },
+      { value: 'mongodb',    label: `MongoDB     (${versions.mongo.tag} · ${versions.mongo.date})` },
       { value: 'none',       label: 'None' },
     ],
   }));
@@ -44,7 +44,7 @@ export async function collectAnswers() {
   const auth = cancelOnExit(await p.select({
     message: 'Authentication:',
     options: [
-      { value: 'kratos', label: 'Ory Kratos (recommended)' },
+      { value: 'kratos', label: `Ory Kratos  (${versions.kratos.tag} · ${versions.kratos.date})` },
       { value: 'jwt',    label: 'Custom JWT scaffold' },
       { value: 'none',   label: 'None' },
     ],
@@ -58,7 +58,7 @@ export async function collectAnswers() {
   return { projectName, frontend, backend, database, auth, awsRegion };
 }
 
-export function buildContext(answers) {
+export function buildContext(answers, versions) {
   return {
     projectName: answers.projectName,
     frontend: answers.frontend,
@@ -82,5 +82,9 @@ export function buildContext(answers) {
     hasBackend:  answers.backend !== 'none',
     backendHasDeps: answers.database !== 'none' || answers.auth === 'kratos',
     hasVolumes:     answers.database !== 'none' || answers.auth === 'kratos',
+    postgresImage: versions.postgres.tag,
+    mongoImage:    versions.mongo.tag,
+    kratosImage:   versions.kratos.tag,
+    mailpitImage:  versions.mailpit.tag,
   };
 }
