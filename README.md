@@ -1,11 +1,10 @@
-<pre align="center">
-         __    _       ____           __
-   _____/ /_  (_)___  / __/___ ______/ /_
-  / ___/ __ \/ / __ \/ /_/ __ `/ ___/ __/
- (__  ) / / / / /_/ / __/ /_/ (__  ) /_
-/____/_/ /_/_/ .___/_/  \__,_/____/\__/
-            /_/
-</pre>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.svg">
+    <img alt="shipfast" src="assets/logo-dark.svg" width="280">
+  </picture>
+</p>
 
 <p align="center">
   <strong>Scaffold a production-ready full-stack app in seconds.</strong><br>

@@ -25,9 +25,14 @@
   "bin": {
     "create-shipfast": "src/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcworkport/create-shipfast.git"
+  },
   "files": [
     "src",
     "templates",
+    "assets",
     "README.md",
     "LICENSE"
   ],
