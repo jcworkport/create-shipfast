@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+import { execSync } from 'child_process';
+
+const registry = process.env.ECR_REGISTRY;
+const region = process.env.AWS_REGION ?? '{{awsRegion}}';
+
+if (!registry) {
+  console.error('ECR_REGISTRY env var is required');
+  process.exit(1);
+}
+
+const sha = execSync('git rev-parse --short HEAD').toString().trim();
+
+function run(cmd) {
+  console.log(`$ ${cmd}`);
+  execSync(cmd, { stdio: 'inherit' });
+}
+
+run(`aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${registry}`);
+
+{{#if hasBackend}}
+const backendImage = `${registry}/{{projectName}}-backend`;
+run(`docker build -t ${backendImage}:${sha} -t ${backendImage}:latest ./backend`);
+run(`docker push ${backendImage}:${sha}`);
+run(`docker push ${backendImage}:latest`);
+{{/if}}
+
+{{#if hasFrontend}}
+const frontendImage = `${registry}/{{projectName}}-frontend`;
+run(`docker build -t ${frontendImage}:${sha} -t ${frontendImage}:latest ./frontend`);
+run(`docker push ${frontendImage}:${sha}`);
+run(`docker push ${frontendImage}:latest`);
+{{/if}}
+
+console.log(`\nDeployed ${sha} to ECR.`);
