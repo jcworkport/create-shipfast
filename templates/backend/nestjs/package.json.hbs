@@ -32,6 +32,14 @@
     {{#if isPostgres}}"prisma": "^5.0.0",{{/if}}
     {{#if isJwt}}"@types/bcrypt": "^5.0.0",
     "@types/passport-jwt": "^4.0.0",{{/if}}
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": ["/node_modules/", "/dist/"]
   }
 }

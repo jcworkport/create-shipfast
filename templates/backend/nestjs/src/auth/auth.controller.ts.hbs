@@ -1,3 +1,4 @@
+{{#if hasAuth}}
 import { Controller, Post, Body, Req, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { SessionGuard } from './session.guard.js';
@@ -32,4 +33,5 @@ export class AuthController {
     return req.user;
   }
 }
+{{/if}}
 {{/if}}

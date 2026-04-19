@@ -13,9 +13,10 @@
       "environment": [
         { "name": "NODE_ENV", "value": "production" }
       ],
-      "secrets": [
-        { "name": "DATABASE_URL", "valueFrom": "arn:aws:ssm:{{awsRegion}}:ACCOUNT_ID:parameter/{{projectName}}/DATABASE_URL" }
-      ],
+      {{#if hasDatabase}}"secrets": [
+        {{#if isPostgres}}{ "name": "DATABASE_URL", "valueFrom": "arn:aws:ssm:{{awsRegion}}:ACCOUNT_ID:parameter/{{projectName}}/DATABASE_URL" }{{/if}}
+        {{#if isMongo}}{ "name": "MONGODB_URI", "valueFrom": "arn:aws:ssm:{{awsRegion}}:ACCOUNT_ID:parameter/{{projectName}}/MONGODB_URI" }{{/if}}
+      ],{{/if}}
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {

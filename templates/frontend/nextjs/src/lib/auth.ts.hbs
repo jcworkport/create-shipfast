@@ -24,15 +24,20 @@ export function getLogoutUrl() {
 {{#if isJwt}}
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
+function setAccessTokenCookie(token: string) {
+  document.cookie = `access_token=${token}; path=/; SameSite=Lax`;
+}
+
 export async function login(email: string, password: string) {
   const res = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
-    credentials: 'include',
   });
   if (!res.ok) throw new Error('Login failed');
-  return res.json();
+  const data = await res.json();
+  setAccessTokenCookie(data.accessToken);
+  return data;
 }
 
 export async function register(email: string, password: string) {
@@ -40,7 +45,6 @@ export async function register(email: string, password: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
-    credentials: 'include',
   });
   if (!res.ok) throw new Error('Registration failed');
   return res.json();

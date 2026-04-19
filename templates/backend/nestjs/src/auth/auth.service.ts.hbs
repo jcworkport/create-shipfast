@@ -1,3 +1,4 @@
+{{#if hasAuth}}
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 {{#if isJwt}}
 import { JwtService } from '@nestjs/jwt';
@@ -40,4 +41,5 @@ export class AuthService {
     return res.json();
   }
 }
+{{/if}}
 {{/if}}

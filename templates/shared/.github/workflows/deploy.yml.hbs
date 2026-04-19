@@ -27,10 +27,10 @@ jobs:
       {{#if hasBackend}}
       - name: Build and push backend image
         run: |
-          IMAGE=$ECR_REGISTRY/{{projectName}}-backend:$GITHUB_SHA
-          docker build -t $IMAGE ./backend
-          docker push $IMAGE
-          echo "BACKEND_IMAGE=$IMAGE" >> $GITHUB_ENV
+          IMAGE=$ECR_REGISTRY/{{projectName}}-backend
+          docker build -t $IMAGE:$GITHUB_SHA -t $IMAGE:latest ./backend
+          docker push $IMAGE:$GITHUB_SHA
+          docker push $IMAGE:latest
 
       - name: Deploy backend to ECS
         run: |
@@ -44,10 +44,10 @@ jobs:
       {{#if hasFrontend}}
       - name: Build and push frontend image
         run: |
-          IMAGE=$ECR_REGISTRY/{{projectName}}-frontend:$GITHUB_SHA
-          docker build -t $IMAGE ./frontend
-          docker push $IMAGE
-          echo "FRONTEND_IMAGE=$IMAGE" >> $GITHUB_ENV
+          IMAGE=$ECR_REGISTRY/{{projectName}}-frontend
+          docker build -t $IMAGE:$GITHUB_SHA -t $IMAGE:latest ./frontend
+          docker push $IMAGE:$GITHUB_SHA
+          docker push $IMAGE:latest
 
       - name: Deploy frontend to ECS
         run: |

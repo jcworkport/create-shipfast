@@ -41,3 +41,7 @@ export class UserService {
   }
 }
 {{/if}}
+{{#unless hasDatabase}}
+@Injectable()
+export class UserService {}
+{{/unless}}

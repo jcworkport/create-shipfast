@@ -1,3 +1,4 @@
+{{#if hasAuth}}
 import { Module } from '@nestjs/common';
 {{#if isKratos}}
 import { AuthService } from './auth.service.js';
@@ -29,4 +30,5 @@ import { SessionGuard } from './session.guard.js';
   exports: [SessionGuard, JwtModule],
 })
 export class AuthModule {}
+{{/if}}
 {{/if}}
