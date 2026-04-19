@@ -33,7 +33,11 @@
         font-family="'Helvetica Neue', Arial, sans-serif"
         font-size="40"
         font-weight="800"
-        letter-spacing="-1">
+        letter-spacing="-1"
+        stroke="#111111"
+        stroke-width="4"
+        stroke-linejoin="round"
+        paint-order="stroke fill">
     <tspan fill="#FFFFFF">ship</tspan><tspan fill="#FACC15">f</tspan><tspan fill="#FFFFFF">ast</tspan>
   </text>
 </svg>
