@@ -35,12 +35,22 @@ npx create-shipfast
 
 Answer a few prompts and get a fully wired project:
 
-- **Frontend:** Next.js 15 (App Router)
+- **Frontend:** Next.js (App Router, latest)
 - **Backend:** NestJS with Fastify
 - **Database:** PostgreSQL (Prisma) or MongoDB
 - **Auth:** Ory Kratos or custom JWT scaffold
 - **CI/CD:** GitHub Actions (test + deploy to AWS ECS)
 - **Infra:** Docker Compose for local dev, ECS task definitions for production
+
+---
+
+### Want to see your favourite stack here?
+
+create-shipfast is open source and built to grow. If there's a framework, database, or auth provider missing — **add it.** Open a PR and help developers everywhere scaffold faster.
+
+**[Contribute on GitHub →](https://github.com/jcworkport/create-shipfast)**
+
+---
 
 ## Usage
 
@@ -60,7 +70,7 @@ create-shipfast
 | Prompt | Options |
 |--------|---------|
 | Project name | lowercase, hyphens |
-| Frontend | Next.js 15, React SPA, Remix, None |
+| Frontend | Next.js (latest), React SPA, Remix, None |
 | Backend | NestJS, Express, Fastify, None |
 | Database | PostgreSQL, MongoDB, None |
 | Authentication | Ory Kratos, JWT, None |
