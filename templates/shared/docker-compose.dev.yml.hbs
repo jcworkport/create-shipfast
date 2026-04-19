@@ -13,8 +13,10 @@ services:
     env_file: .env
     environment:
       - NODE_ENV=development
+    {{#if hasBackend}}
     depends_on:
-      {{#if hasBackend}}- backend{{/if}}
+      - backend
+    {{/if}}
   {{/if}}
 
   {{#if hasBackend}}
@@ -31,15 +33,20 @@ services:
     env_file: .env
     environment:
       - NODE_ENV=development
+      {{#if isPostgres}}- DATABASE_URL=postgresql://postgres:postgres@postgres-app:5432/{{projectName}}{{/if}}
+      {{#if isMongo}}- MONGODB_URI=mongodb://mongo:27017/{{projectName}}{{/if}}
+      {{#if isKratos}}- KRATOS_URL=http://kratos:4433{{/if}}
+    {{#if backendHasDeps}}
     depends_on:
       {{#if isPostgres}}- postgres-app{{/if}}
       {{#if isMongo}}- mongo{{/if}}
       {{#if isKratos}}- kratos{{/if}}
+    {{/if}}
   {{/if}}
 
   {{#if isPostgres}}
   postgres-app:
-    image: postgres:16-alpine
+    image: {{postgresImage}}
     environment:
       POSTGRES_DB: {{projectName}}
       POSTGRES_USER: postgres
@@ -52,7 +59,7 @@ services:
 
   {{#if isMongo}}
   mongo:
-    image: mongo:7
+    image: {{mongoImage}}
     ports:
       - "27017:27017"
     volumes:
@@ -61,7 +68,7 @@ services:
 
   {{#if isKratos}}
   kratos:
-    image: oryd/kratos:v1.2
+    image: {{kratosImage}}
     ports:
       - "4433:4433"
       - "4434:4434"
@@ -75,7 +82,7 @@ services:
       - postgres-kratos
 
   postgres-kratos:
-    image: postgres:16-alpine
+    image: {{postgresImage}}
     environment:
       POSTGRES_DB: kratos
       POSTGRES_USER: postgres
@@ -83,14 +90,16 @@ services:
     volumes:
       - postgres-kratos-data:/var/lib/postgresql/data
 
-  mailslurper:
-    image: oryd/mailslurper:latest-smtps
+  mailpit:
+    image: {{mailpitImage}}
     ports:
-      - "4436:4436"
-      - "4437:4437"
+      - "8025:8025"
+      - "1025:1025"
   {{/if}}
 
+{{#if hasVolumes}}
 volumes:
   {{#if isPostgres}}postgres-app-data:{{/if}}
   {{#if isMongo}}mongo-data:{{/if}}
   {{#if isKratos}}postgres-kratos-data:{{/if}}
+{{/if}}

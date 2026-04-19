@@ -138,4 +138,38 @@ describe('processTemplateDir', () => {
     const result = await readFile(join(dest, 'app.ts'), 'utf-8');
     expect(result).toBe('\nalways here');
   });
+
+  test('dev compose renders resolved image tags from context variables', async () => {
+    const src = await makeTmpDir();
+    const dest = await makeTmpDir();
+    const raw = await readFile(
+      new URL('../templates/shared/docker-compose.dev.yml.hbs', import.meta.url),
+      'utf-8'
+    );
+    await writeFile(join(src, 'docker-compose.dev.yml.hbs'), raw);
+
+    await processTemplateDir(src, dest, {
+      hasFrontend: false,
+      hasBackend: true,
+      isPostgres: true,
+      isMongo: false,
+      isKratos: true,
+      backendHasDeps: true,
+      hasVolumes: true,
+      projectName: 'test-app',
+      postgresImage: 'postgres:16.4-alpine',
+      mongoImage: 'mongo:7.0.14',
+      kratosImage: 'oryd/kratos:v1.3.1',
+      mailpitImage: 'axllent/mailpit:v1.22.0',
+    });
+
+    const result = await readFile(join(dest, 'docker-compose.dev.yml'), 'utf-8');
+    expect(result).toContain('image: postgres:16.4-alpine');
+    expect(result).toContain('image: oryd/kratos:v1.3.1');
+    expect(result).toContain('image: axllent/mailpit:v1.22.0');
+    expect(result).not.toContain('oryd/mailslurper');
+    expect(result).not.toContain('postgres:16-alpine');
+    expect(result).toContain('8025:8025');
+    expect(result).toContain('1025:1025');
+  });
 });
